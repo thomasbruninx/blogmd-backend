@@ -8,10 +8,10 @@ using Models;
 public class PostService : IPostService {
   private readonly IMongoCollection<Post> _postsCollection;
 
-  public PostService(IOptions<PostDatastoreSettings> postDatastoreSettings) {
-    var mongoClient = new MongoClient(postDatastoreSettings.Value.ConnectionString);
-    var mongoDatabase = mongoClient.GetDatabase(postDatastoreSettings.Value.DatabaseName);
-    _postsCollection = mongoDatabase.GetCollection<Post>(postDatastoreSettings.Value.PostsCollectionName);
+  public PostService(IOptions<DatastoreSettings> datastoreSettings) {
+    var mongoClient = new MongoClient(datastoreSettings.Value.ConnectionString);
+    var mongoDatabase = mongoClient.GetDatabase(datastoreSettings.Value.DatabaseName);
+    _postsCollection = mongoDatabase.GetCollection<Post>(datastoreSettings.Value.PostsCollectionName);
   }
 
   public async Task<List<Post>> GetAsync() =>
@@ -20,8 +20,8 @@ public class PostService : IPostService {
   public async Task<Post?> GetAsync(string id) =>
     await _postsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-  public async Task<Post?> GetAsyncByPermalink(string permalink) =>
-    await _postsCollection.Find(x => x.Permalink == permalink).FirstOrDefaultAsync();
+  public async Task<Post?> GetAsyncBySlug(string slug) =>
+    await _postsCollection.Find(x => x.Slug == slug).FirstOrDefaultAsync();
 
   public async Task CreateAsync(Post newPost) =>
     await _postsCollection.InsertOneAsync(newPost);
@@ -40,7 +40,7 @@ public class PostService : IPostService {
     if (!patchedPost.Title.IsNullOrEmpty()) update = update.Set(x => x.Title, patchedPost.Title);
     if (!patchedPost.Excerpt.IsNullOrEmpty()) update = update.Set(x => x.Excerpt, patchedPost.Excerpt);
     if (!patchedPost.Content.IsNullOrEmpty()) update = update.Set(x => x.Content, patchedPost.Content);
-    if (!patchedPost.Permalink.IsNullOrEmpty()) update = update.Set(x => x.Permalink, patchedPost.Permalink);
+    if (!patchedPost.Slug.IsNullOrEmpty()) update = update.Set(x => x.Slug, patchedPost.Slug);
 
     update = update.Set(x => x.ModifiedOn, DateTime.Now);
 

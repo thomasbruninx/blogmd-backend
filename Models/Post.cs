@@ -32,7 +32,7 @@ public class Post {
   [JsonPropertyName("content")]
   public string? Content { get; set; }
 
-  [BsonElement("permalink")]
-  [JsonPropertyName("permalink")]
-  public string? Permalink { get; set; }
+  [BsonElement("slug")]
+  [JsonPropertyName("slug")]
+  public string? Slug { get; set; }
 }

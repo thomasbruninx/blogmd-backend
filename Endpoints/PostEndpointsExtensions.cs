@@ -28,15 +28,15 @@ public static class PostEndpointsExtensions {
         Tags = new List<OpenApiTag> { new() { Name = "Posts" } }
       });
     
-    app.MapGet("/posts/{permalink}", async Task<Results<Ok<Post>, NotFound>> (IPostService postService, string permalink) =>
-        await postService.GetAsyncByPermalink(permalink) is { } post
+    app.MapGet("/posts/{slug}", async Task<Results<Ok<Post>, NotFound>> (IPostService postService, string slug) =>
+        await postService.GetAsyncBySlug(slug) is { } post
           ? TypedResults.Ok(post)
           : TypedResults.NotFound()
-      ).WithName("GetPostByPermalink")
+      ).WithName("GetPostBySlug")
       .WithOpenApi(x => new OpenApiOperation(x)
       {
-        Summary = "GetPostByPermalink",
-        Description = "Returns single post by permalink",
+        Summary = "GetPostBySlug",
+        Description = "Returns single post by slug",
         Tags = new List<OpenApiTag> { new() { Name = "Posts" } }
       });
 

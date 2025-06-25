@@ -8,7 +8,7 @@ public interface IPostService {
 
   Task<Post?> GetAsync(string id);
   
-  Task<Post?> GetAsyncByPermalink(string permalink);
+  Task<Post?> GetAsyncBySlug(string slug);
 
   Task CreateAsync(Post newPost);
 
